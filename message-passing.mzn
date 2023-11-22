@@ -1,6 +1,8 @@
 include "globals.mzn";
 
-% Email is out of order at St. Mary's College and the teacher wants 
+% Description-only-but-not-solution taken from http://www.hakank.org/minizinc/message_sending.mzn
+%
+% Email is out of order at the College and the teacher wants 
 % to tell Robert something urgent.
 % The teacher meets Craig and asks him to tell Robert she wants to speak 
 % with him. 
@@ -16,8 +18,7 @@ include "globals.mzn";
 % 5) Kiki meets Chris
 % 6) Chris meets David and Adam
 % 7) David meets Robert
-% Which path(s) might the message to Robert have taken?
-% Description-only-but-not-solution taken from http://www.hakank.org/minizinc/message_sending.mzn
+% Which path(s) might the message from Craig to Robert have taken?
 
 enum Person = { Craig,John,Jason,Kiki,Adam,David,Scott,Jeremy,Chris,Robert };
 Person: msgFrom = Craig;
