@@ -18,22 +18,37 @@ include "globals.mzn";
 % 5) Kiki meets Chris
 % 6) Chris meets David and Adam
 % 7) David meets Robert
-% Which path(s) might the message from Craig to Robert have taken?
+% Which path(s), from longest to shortest, might the message from Craig to Robert have taken?
 
 enum Person = { Craig,John,Jason,Kiki,Adam,David,Scott,Jeremy,Chris,Robert };
+int: numPersons = card(Person);
 Person: msgFrom = Craig;
 Person: msgTo = Robert;
 
-array[_] of tuple (Person, Person): tupMeets = [(Craig, John), (Craig, Jason), (Jason, Kiki), (Jason, Adam), (Jason, David), (Adam, Scott), (Adam, Jeremy), (Jeremy, John), (Jeremy, Scott), (Kiki, Chris), (Chris, David), (Chris, Adam), (David, Robert)];
-array[Person,Person] of var bool: meets;
 
-constraint forall (meet in tupMeets)
-  ((meets[meet.1,meet.2] == true)  /\  (meets[meet.2,meet.1] == true));
+array[Person,Person] of bool: meets = array2d(Person, Person,
+  [ %Craig John   Jason  Kiki   Adam   David  Scott  Jeremy Chris  Robert
+    false,  true,  true, false, false, false, false, false, false, false, % Craig
+     true, false, false, false, false, false, false,  true, false, false, % John
+     true, false, false,  true,  true,  true, false, false, false, false, % Jason
+    false, false,  true, false, false, false, false, false,  true, false, % Kiki
+    false, false,  true, false, false, false,  true,  true,  true, false, % Adam
+    false, false,  true, false, false, false, false, false,  true,  true, % David
+    false, false, false, false,  true, false, false,  true, false, false, % Scott
+    false,  true, false, false,  true, false,  true, false, false, false, % Jeremy
+    false, false, false,  true,  true,  true, false, false, false, false, % Chris
+    false, false, false, false, false,  true, false, false, false,  true, % Robert
+  ]);
 
-array[index_set(tupMeets)] of var Person: hops;
+array[1..count(meets)] of var Person: hops;
+array[1..count(meets)] of var bool: isRecipient;
 
 constraint hops[1] == msgFrom;
-constraint hops[length(tupMeets)] == msgTo;
+constraint hops[count(meets)] == msgTo;
 constraint all_different_except(hops, {msgTo});
-constraint forall (i in hops where i > 1)
+constraint forall (i in 1..count(meets))
+  (isRecipient[i] == (hops[i] == msgTo));
+constraint forall (i in 2..count(meets))
   (meets[hops[i],hops[i-1]]);
+
+solve maximize(count(isRecipient));
