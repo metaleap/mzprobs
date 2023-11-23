@@ -16,6 +16,7 @@ array[Programmer,Task] of int: ranking = [| 4, 1, 3, 5, 2
                                           | 4, 2, 3, 1, 5 |]; % lowest number is highest ranking
 
 array[Programmer] of var Task: taskPerProgrammer;
+constraint all_different(taskPerProgrammer);
 
 array[Programmer] of var int: taskRankingPerProgrammer;
 constraint forall (p in index_set(taskRankingPerProgrammer)) (taskRankingPerProgrammer[p] == ranking[p, taskPerProgrammer[p]]);
