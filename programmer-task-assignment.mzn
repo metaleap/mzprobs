@@ -19,9 +19,9 @@ array[Programmer] of var Task: taskPerProgrammer;
 constraint all_different(taskPerProgrammer);
 
 array[Programmer] of var int: taskRankingPerProgrammer;
-constraint forall (p in index_set(taskRankingPerProgrammer)) (taskRankingPerProgrammer[p] == ranking[p, taskPerProgrammer[p]]);
+constraint forall (p in Programmer) (taskRankingPerProgrammer[p] == ranking[p, taskPerProgrammer[p]]);
 
 var int: totalRanking;
-constraint totalRanking == sum(programmer in Programmer) (taskRankingPerProgrammer[programmer]);
+constraint totalRanking == sum(taskRankingPerProgrammer);
 
 solve minimize totalRanking;
