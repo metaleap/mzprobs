@@ -13,12 +13,12 @@ array[Customer,Location] of int: distance = [| 2, 10, 50 |
                                                2, 10, 52 |
                                                50, 60, 3 |
                                                40, 60, 1 |];
-int: maxNumWarehouses = 2;                 
+int: numWarehouses = 2;                 
 
 array[Location] of var bool: _warehouse;
 array[Location] of var 0..(max(distance)*max(demand)*card(Customer)): _distanceNr;
 
-constraint (let {var int:c = count(_warehouse)} in (c >= 1) /\ (c <= maxNumWarehouses));
+constraint (count(_warehouse) == numWarehouses);
 constraint forall (loc in Location) 
                   (_distanceNr[loc] == (if not(_warehouse[loc]) then 0 else (sum (cust in Customer) (distance[cust,loc] * demand[cust])) endif));
 
